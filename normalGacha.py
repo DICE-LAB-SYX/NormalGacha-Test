@@ -102,7 +102,7 @@ def refresh_tag_list() -> List:
     ranks, probs = zip(*rank_weights.items())
 
     while len(tags_set) < 5:
-        random_group = random.choices(ranks, probs, k=15)
+        random_group = random.choices(ranks, probs, k=10)
         char_pool = [random.choice(chars_list[int(group[:1]) - 1]) for group in random_group]
         tags_set = list(set([tag for char in char_pool for tag in char_data[char]["tags"]]))
 
