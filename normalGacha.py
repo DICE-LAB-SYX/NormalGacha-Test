@@ -1,4 +1,5 @@
 import json
+import os
 import random
 from re import sub
 from typing import Dict, List, Set, Tuple
@@ -15,7 +16,6 @@ player_data = {
         }
     }
 }
-tag_list = []
 
 
 def parse_recruitable_chars(s: str) -> Set[str]:
@@ -102,7 +102,7 @@ def refresh_tag_list() -> List:
     ranks, probs = zip(*rank_weights.items())
 
     while len(tags_set) < 5:
-        random_group = random.choices(ranks, probs, k=10)
+        random_group = random.choices(ranks, probs, k=15)
         char_pool = [random.choice(chars_list[int(group[:1]) - 1]) for group in random_group]
         tags_set = list(set([tag for char in char_pool for tag in char_data[char]["tags"]]))
 
@@ -111,16 +111,17 @@ def refresh_tag_list() -> List:
     player_data["track"]["recruit"]["pool"] = char_pool
 
     tag2name = {v["tagId"]: v["tagName"] for v in GACHA_TABLE["gachaTags"][:-2]}
+    print("-" * 20)
     for i in tag_list:
         print(tag2name[i])
-
+    print("-" * 20)
     return tag_list
 
 
 def generate_valid_tags(duration: int) -> tuple[str, List]:
 
     char_list, char_data = generate_recruitable_data()
-    selected_tags = random.sample(tag_list, 3)
+    selected_tags = random.sample(tag_list, random.randint(0, 3))
     print(f"selected_tags：\t\t{selected_tags}")
     if duration <= 13800:
         char_range = [0, 3]
@@ -145,6 +146,16 @@ def generate_valid_tags(duration: int) -> tuple[str, List]:
     matching_chars = {char: alternate_char_data[char] for char in alternate_char_data if set(alternate_char_data[char]['tags']).intersection(set(selected_tags))}
     sorted_matching_chars = sorted(matching_chars.items(), key=lambda x: len(set(x[1]['tags']).intersection(set(selected_tags))), reverse=True)
     print(f"matching_chars：\t{sorted_matching_chars}")
+
+    if len(selected_tags) == 1:
+        compensation = 6.3 - (duration // 600 * 0.05)
+        cross_tag = random.choices([0, 1], weights=[100 - compensation, compensation], k=1)[0]
+        if cross_tag:
+            sorted_matching_chars = []
+            print("\033[0;32mcross_tag：\t\tTrue\033[0;0m")
+        else:
+            print("cross_tag：\t\tFalse")
+
     if len(sorted_matching_chars) == 0:
         char_range[1] += 1
         group_weights = [5 if rank == 0 else 15 if rank == 1 else 77 if rank == 2 else 2 if rank == 3 else 1 for rank in range(*char_range)]
@@ -160,7 +171,12 @@ def generate_valid_tags(duration: int) -> tuple[str, List]:
     return random_char_id, filter_tags
 
 
-tag_list = refresh_tag_list()
-print(f"tag_list：\t\t{tag_list}")
+if __name__ == "__main__":
 
-generate_valid_tags(27000)
+    os.system("")
+
+    for i in range(100):
+        tag_list = refresh_tag_list()
+        print(f"tag_list：\t\t{tag_list}")
+
+        generate_valid_tags(32400)
