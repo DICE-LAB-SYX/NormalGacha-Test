@@ -129,9 +129,9 @@ def generate_valid_tags(duration: int) -> tuple[str, List]:
         char_range = [1, 4]
     else:
         if 11 in selected_tags:
-            char_range = [4, 4]
-        elif 14 in selected_tags:
             char_range = [5, 5]
+        elif 14 in selected_tags:
+            char_range = [4, 4]
         else:
             char_range = [2, 4]
 
