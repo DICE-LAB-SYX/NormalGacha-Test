@@ -147,7 +147,7 @@ def generate_valid_tags(duration: int) -> tuple[str, List]:
     sorted_matching_chars = sorted(matching_chars.items(), key=lambda x: len(set(x[1]['tags']).intersection(set(selected_tags))), reverse=True)
     print(f"matching_chars：\t{sorted_matching_chars}")
 
-    if len(selected_tags) == 1:
+    if len(selected_tags) == 1 and 11 not in selected_tags:
         compensation = 6.3 - (duration // 600 * 0.05)
         cross_tag = random.choices([0, 1], weights=[100 - compensation, compensation], k=1)[0]
         if cross_tag:
