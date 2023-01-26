@@ -122,7 +122,7 @@ def generate_valid_tags(duration: int) -> tuple[str, List]:
 
     char_list, char_data = generate_recruitable_data()
     selected_tags = random.sample(tag_list, random.randint(0, 3))
-    print(f"selected_tags：\t\t{selected_tags}")
+    print(f"selected_tags：\t\t{selected_tags}\nduration：\t\t{duration}")
     if duration <= 13800:
         char_range = [0, 3]
     elif duration <= 27000:
@@ -152,7 +152,7 @@ def generate_valid_tags(duration: int) -> tuple[str, List]:
         cross_tag = random.choices([0, 1], weights=[100 - compensation, compensation], k=1)[0]
         if cross_tag:
             sorted_matching_chars = []
-            print("\033[0;32mcross_tag：\t\tTrue\033[0;0m")
+            print("\033[1;31mcross_tag：\t\tTrue\033[0;0m")
         else:
             print("cross_tag：\t\tFalse")
 
@@ -179,4 +179,4 @@ if __name__ == "__main__":
         tag_list = refresh_tag_list()
         print(f"tag_list：\t\t{tag_list}")
 
-        generate_valid_tags(32400)
+        generate_valid_tags(3600 + 600 * random.randint(0, 48))
